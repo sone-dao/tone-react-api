@@ -10,6 +10,8 @@ interface ILyrics {
 
 export default function useToneApi() {
   const api = 'https://api.tone.audio'
+  const auth = 'https://auth.tone.audio'
+
   const accessToken = sessionStorage.getItem('tone.access')
 
   const tone = {
@@ -22,9 +24,8 @@ export default function useToneApi() {
     },
     auth: {
       nonce: async (email: string, nonce: string, additionalData: any) =>
-        await post(api + '/auth/nonce', { email, nonce, additionalData }),
-      token: async (token: string) =>
-        await post(api + '/auth/token', { token }),
+        await post(auth + '/nonce', { email, nonce, additionalData }),
+      token: async (token: string) => await post(auth + '/token', { token }),
     },
     credits: {
       search: async (term: string) => await get(api + '/credits?q=' + term),
