@@ -23,6 +23,7 @@ export default function useToneApi() {
       search: async (term: string) => await get(api + '/artists?q=' + term),
     },
     auth: {
+      sendNonce: async (email: string) => await post(auth + '/email', {email}),
       nonce: async (email: string, nonce: string, additionalData: any) =>
         await post(auth + '/nonce', { email, nonce, additionalData }),
       token: async (token: string) => await post(auth + '/token', { token }),
