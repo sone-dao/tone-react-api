@@ -103,74 +103,29 @@ export default function useToneApi() {
   return tone
 
   async function get(url: string) {
-    const config = {
-      headers: {
-        Authorization: `BEARER ${accessToken}`,
-      },
-    }
-
-    const result = await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
-
-    if (result.status !== 401) return result
-
-    await genNewAccessToken()
-
-    return await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
+    return await apiFetch('GET', url)
   }
 
   async function put(url: string, data: any) {
-    const config = {
-      method: 'PUT',
-      headers: {
-        Authorization: `BEARER ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }
-
-    const result = await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
-
-    if (result.status !== 401) return result
-
-    await genNewAccessToken()
-
-    return await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
+    return await apiFetch('PUT', url, data)
   }
 
   async function patch(url: string, data: any) {
-    const config = {
-      method: 'PATCH',
-      headers: {
-        Authorization: `BEARER ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }
-
-    const result = await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
-
-    if (result.status !== 401) return result
-
-    await genNewAccessToken()
-
-    return await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
+    return await apiFetch('PATCH', url, data)
   }
 
   async function post(url: string, data: any) {
-    const config = {
-      method: 'POST',
+    return await apiFetch('POST', url, data)
+  }
+
+  async function apiFetch(
+    method: string,
+    url: string,
+    data?: any,
+    fetchConfig?: object
+  ) {
+    const config = fetchConfig || {
+      method,
       headers: {
         Authorization: `BEARER ${accessToken}`,
         'Content-Type': 'application/json',
@@ -180,7 +135,7 @@ export default function useToneApi() {
 
     const result = await fetch(url, config)
       .then((response) => response.json())
-      .catch((error) => console.log(error))
+      .catch((error) => error)
 
     if (result.status !== 401) return result
 
