@@ -1,3 +1,5 @@
+'use client'
+
 interface IToneReactApiAuthConfig {
   otp?: string
   nonce?: string

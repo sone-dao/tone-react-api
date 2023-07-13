@@ -1,12 +1,19 @@
 {
   "name": "@sone-dao/tone-react-api",
   "version": "0.8.1",
+  "main": "dist/cjs/src/index.js",
+  "module": "dist/esm/src/index.js",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/sone-dao/tone-react-api.git",
-  "license": "MIT",
   "scripts": {
+    "prebuild": "rm -rf dist",
     "build": "rollup -c",
-    "dev": "node ./dev.js"
+    "lint": "yarn run eslint --ignore-path .gitignore --fix src/**/*",
+    "format": "prettier --write src"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
@@ -16,25 +23,23 @@
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "chokidar": "^3.5.3",
+    "husky": "^8.0.3",
     "postcss": "^8.4.21",
     "prettier": "^2.8.3",
     "rollup": "^3.12.1",
+    "rollup-plugin-analyze": "^0.3.0",
     "rollup-plugin-dts": "^5.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-preserve-directives": "^0.1.1",
     "sass": "^1.58.0",
     "shelljs": "^0.8.5",
     "tslib": "^2.5.0",
     "typescript": "^4.9.5"
   },
   "peerDependencies": {
+    "next": "^13.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "files": [
-    "dist"
-  ],
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts"
+  }
 }
