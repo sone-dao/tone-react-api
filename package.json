@@ -1,6 +1,6 @@
 {
   "name": "@sone-dao/tone-react-api",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "main": "dist/cjs/src/index.js",
   "module": "dist/esm/src/index.js",
   "types": "dist/index.d.ts",
