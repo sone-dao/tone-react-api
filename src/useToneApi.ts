@@ -14,15 +14,17 @@ export default function useToneApi() {
       email: {
         /**
          *
-         * @param email
+         * @param {string} email - The user's email address.
          * @returns
          */
         attempt: async (email: string) =>
           await get(api + '/auth?email=' + email),
         /**
          *
-         * @param email
-         * @param config
+         * @param {string} email - The user's email address.
+         * @param {Object} config - Config object for Tone API route.
+         * @param {string} config.otp - The user supplied time password.
+         * @param {string} config.nonce - The user supplied nonce.
          * @returns
          */
         auth: async (email: string, config: IToneReactApiAuthConfig) =>
@@ -35,19 +37,19 @@ export default function useToneApi() {
     users: {
       /**
        *
-       * @param userId
+       * @param {string} userId - The user's public ID on Tone.
        * @returns
        */
       get: async (userId: string) => await get(api + `/users/${userId}`),
       /**
        *
-       * @param user
+       * @param user - User object
        * @returns
        */
       create: async (user: any) => await put(api + '/users', user),
       /**
        *
-       * @param user
+       * @param user - User object
        * @returns
        */
       update: async (user: any) => await patch(api + '/users', user),
@@ -56,13 +58,13 @@ export default function useToneApi() {
       entities: {
         /**
          *
-         * @param entity
+         * @param entity - Entity object
          * @returns
          */
         create: async (entity: any) => await put(api + '/entities', entity),
         /**
          *
-         * @param entity
+         * @param entity - Entity object
          * @returns
          */
         update: async (entity: any) => await patch(api + '/entities', entity),
@@ -70,13 +72,13 @@ export default function useToneApi() {
       releases: {
         /**
          *
-         * @param release
+         * @param release - Release object
          * @returns
          */
         create: async (release: any) => await put(api + '/releases', release),
         /**
          *
-         * @param release
+         * @param release - Release object
          * @returns
          */
         update: async (release: any) => await patch(api + '/releases', release),
@@ -84,13 +86,13 @@ export default function useToneApi() {
       songs: {
         /**
          *
-         * @param song
+         * @param song - Song object
          * @returns
          */
         create: async (song: any) => await put(api + '/songs', song),
         /**
          *
-         * @param song
+         * @param song - Song object
          * @returns
          */
         update: async (song: any) => await patch(api + '/songs', song),
