@@ -1,6 +1,6 @@
 {
   "name": "@sone-dao/tone-react-api",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "repository": "https://github.com/sone-dao/tone-react-api.git",
   "license": "MIT",
   "scripts": {
