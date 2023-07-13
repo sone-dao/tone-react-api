@@ -35,6 +35,21 @@ export default function useToneApi() {
             nonce: config.nonce,
           }),
       },
+      token: {
+        /**
+         *
+         * @returns
+         */
+        refresh: async () =>
+          await fetch(api + '/auth/token/refresh', {
+            method: 'GET',
+            headers: {
+              Authorization: 'BEARER ' + sessionToken,
+            },
+          })
+            .then((response) => response.json())
+            .catch((error) => error),
+      },
     },
     users: {
       /**
@@ -129,7 +144,7 @@ export default function useToneApi() {
     const config = fetchConfig || {
       method,
       headers: {
-        Authorization: `BEARER ${accessToken}`,
+        Authorization: 'BEARER ' + accessToken,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
