@@ -28,7 +28,7 @@ export default function useToneApi() {
          * @returns
          */
         auth: async (email: string, config: IToneReactApiAuthConfig) =>
-          await post(api + '/auth?email', {
+          await post(api + '/auth?email=' + email, {
             otp: config.otp,
             nonce: config.nonce,
           }),
@@ -133,9 +133,10 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    const result = await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => error)
+    const result =
+      (await fetch(url, config)
+        .then((response) => response.json())
+        .catch((error) => error)) || false
 
     if (result.status !== 401) return result
 
