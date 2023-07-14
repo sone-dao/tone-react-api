@@ -1,11 +1,15 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 interface IToneReactApiAuthConfig {
   otp?: string
   nonce?: string
 }
 
 export default function useToneApi() {
+  const router = useRouter()
+
   const api = 'https://api.tone.audio/v1'
 
   const accessToken = sessionStorage.getItem('tone.access')
@@ -170,7 +174,7 @@ export default function useToneApi() {
   }
 
   async function genNewAccessToken() {
-    const newAccessToken = await fetch(api + 'auth/token/renew', {
+    const newAccessToken = await fetch(api + '/auth/token/refresh', {
       method: 'GET',
       headers: {
         Authorization: `BEARER ${sessionToken}`,
@@ -178,12 +182,12 @@ export default function useToneApi() {
       },
     })
       .then((response) => response.json())
-      .then((data) => data.token.access)
+      .then((data) => data.tokens.access)
 
     if (!newAccessToken) {
       //Send user to login page, etc
       localStorage.setItem('tone.session', '')
-      return console.log('Invalid session token.')
+      return router.push('/login?t=expired')
     }
 
     sessionStorage.setItem('tone.access', newAccessToken)
