@@ -12,9 +12,6 @@ export default function useToneApi() {
 
   const api = 'https://api.tone.audio/v1'
 
-  const accessToken = sessionStorage.getItem('tone.access')
-  const sessionToken = localStorage.getItem('tone.session')
-
   const tone = {
     auth: {
       email: {
@@ -48,7 +45,7 @@ export default function useToneApi() {
           await fetch(api + '/auth/token/refresh', {
             method: 'GET',
             headers: {
-              Authorization: 'BEARER ' + sessionToken,
+              Authorization: 'BEARER ' + localStorage.getItem('tone.session'),
             },
           })
             .then((response) => response.json())
@@ -150,6 +147,8 @@ export default function useToneApi() {
     data?: any,
     fetchConfig?: object
   ) {
+    const accessToken = sessionStorage.getItem('tone.access')
+
     const config = fetchConfig || {
       method,
       headers: {
@@ -174,6 +173,8 @@ export default function useToneApi() {
   }
 
   async function genNewAccessToken() {
+    const sessionToken = localStorage.getItem('tone.session')
+
     const newAccessToken = await fetch(api + '/auth/token/refresh', {
       method: 'GET',
       headers: {
