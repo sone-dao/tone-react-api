@@ -63,7 +63,8 @@ export default function useToneApi() {
        * @param {string} userId - The user's public ID on Tone.
        * @returns
        */
-      get: async (userId: string) => await get(api + `/users/${userId}`),
+      get: async (userId?: string) =>
+        await get(api + '/users' + userId && `?userId=${userId}`),
       /**
        *
        * @param user - User object
