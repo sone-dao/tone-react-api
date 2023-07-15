@@ -82,18 +82,34 @@ export default function useToneApi() {
       entities: {
         /**
          *
-         * @param entity - Entity object
+         * @param entityId
          * @returns
          */
-        create: async (entity: any) => await put(api + '/entities', entity),
+        get: async (entityId: string = '') =>
+          await get(api + '/catalog/entities?entityId=' + entityId),
         /**
          *
          * @param entity - Entity object
          * @returns
          */
-        update: async (entity: any) => await patch(api + '/entities', entity),
+        create: async (entity: any) =>
+          await put(api + '/catalog/entities', entity),
+        /**
+         *
+         * @param entity - Entity object
+         * @returns
+         */
+        update: async (entity: any) =>
+          await patch(api + '/catalog/entities', entity),
       },
       releases: {
+        /**
+         *
+         * @param releaseId
+         * @returns
+         */
+        get: async (releaseId: string = '') =>
+          await get(api + '/catalog/releases?releaseId=' + releaseId),
         /**
          *
          * @param release - Release object
