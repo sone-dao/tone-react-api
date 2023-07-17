@@ -115,13 +115,15 @@ export default function useToneApi() {
          * @param release - Release object
          * @returns
          */
-        create: async (release: any) => await put(api + '/releases', release),
+        create: async (release: any) =>
+          await put(api + '/catalog/releases', release),
         /**
          *
          * @param release - Release object
          * @returns
          */
-        update: async (release: any) => await patch(api + '/releases', release),
+        update: async (release: any) =>
+          await patch(api + '/catalog/releases', release),
       },
       songs: {
         /**
@@ -129,13 +131,13 @@ export default function useToneApi() {
          * @param song - Song object
          * @returns
          */
-        create: async (song: any) => await put(api + '/songs', song),
+        create: async (song: any) => await put(api + '/catalog/songs', song),
         /**
          *
          * @param song - Song object
          * @returns
          */
-        update: async (song: any) => await patch(api + '/songs', song),
+        update: async (song: any) => await patch(api + '/catalog/songs', song),
       },
     },
   }
