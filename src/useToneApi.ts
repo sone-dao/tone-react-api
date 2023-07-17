@@ -128,6 +128,13 @@ export default function useToneApi() {
       songs: {
         /**
          *
+         * @param songId - id of song on Tone
+         * @returns
+         */
+        get: async (songId: string = '') =>
+          await get(api + '/catalog/songs?songId=' + songId),
+        /**
+         *
          * @param song - Song object
          * @returns
          */
