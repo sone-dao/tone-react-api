@@ -124,6 +124,24 @@ export default function useToneApi() {
          */
         update: async (release: any) =>
           await patch(api + '/catalog/releases', release),
+        artwork: {
+          /**
+           *
+           * @param releaseId
+           * @param type
+           * @param file
+           * @returns
+           */
+          upload: async (releaseId: string, type: string, file: File) =>
+            await put(api + '/catalog/releases/' + releaseId + '/art/' + type, {
+              method: 'PUT',
+              headers: {
+                Authorization:
+                  'BEARER ' + sessionStorage.getItem('tone.access'),
+              },
+              body: new FormData().append('file', file),
+            }),
+        },
       },
       songs: {
         /**
@@ -155,8 +173,8 @@ export default function useToneApi() {
     return await apiFetch('GET', url)
   }
 
-  async function put(url: string, data: any) {
-    return await apiFetch('PUT', url, data)
+  async function put(url: string, data: any, config?: any) {
+    return await apiFetch('PUT', url, data, config)
   }
 
   async function patch(url: string, data: any) {
