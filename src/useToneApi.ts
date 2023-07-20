@@ -138,6 +138,7 @@ export default function useToneApi() {
               headers: {
                 Authorization:
                   'BEARER ' + sessionStorage.getItem('tone.access'),
+                'Content-Type': 'multipart/form-data',
               },
               body: new FormData().append('file', file),
             }),
