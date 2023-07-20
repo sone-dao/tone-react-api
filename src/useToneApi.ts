@@ -132,16 +132,23 @@ export default function useToneApi() {
            * @param file
            * @returns
            */
-          upload: async (releaseId: string, type: string, file: File) =>
-            await put(api + '/catalog/releases/' + releaseId + '/art/' + type, {
-              method: 'PUT',
-              headers: {
-                Authorization:
-                  'BEARER ' + sessionStorage.getItem('tone.access'),
-                'Content-Type': 'multipart/form-data',
-              },
-              body: new FormData().append('file', file),
-            }),
+          upload: async (releaseId: string, type: string, file: File) => {
+            const formData = new FormData()
+
+            formData.append('file', file)
+
+            await fetch(
+              api + '/catalog/releases/' + releaseId + '/art/' + type,
+              {
+                method: 'PUT',
+                headers: {
+                  Authorization:
+                    'BEARER ' + sessionStorage.getItem('tone.access'),
+                },
+                body: formData,
+              }
+            )
+          },
         },
       },
       songs: {
