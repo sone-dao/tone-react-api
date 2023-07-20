@@ -137,17 +137,14 @@ export default function useToneApi() {
 
             formData.append('file', file)
 
-            await fetch(
-              api + '/catalog/releases/' + releaseId + '/art/' + type,
-              {
-                method: 'PUT',
-                headers: {
-                  Authorization:
-                    'BEARER ' + sessionStorage.getItem('tone.access'),
-                },
-                body: formData,
-              }
-            )
+            await put(api + '/catalog/releases/' + releaseId + '/art/' + type, {
+              method: 'PUT',
+              headers: {
+                Authorization:
+                  'BEARER ' + sessionStorage.getItem('tone.access'),
+              },
+              body: formData,
+            })
           },
         },
       },
