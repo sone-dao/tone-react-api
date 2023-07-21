@@ -122,8 +122,11 @@ export default function useToneApi() {
          * @param release - Release object
          * @returns
          */
-        update: async (release: any) =>
-          await patch(api + '/catalog/releases', release),
+        update: async (releaseId: string, release: any) =>
+          await patch(
+            api + '/catalog/releases?releaseId=' + releaseId,
+            release
+          ),
         artwork: {
           /**
            *
