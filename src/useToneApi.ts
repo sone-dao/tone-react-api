@@ -175,7 +175,8 @@ export default function useToneApi() {
          * @param song - Song object
          * @returns
          */
-        update: async (song: any) => await patch(api + '/catalog/songs', song),
+        update: async (songId: string, song: any) =>
+          await patch(api + '/catalog/songs?songId=' + songId, song),
         /**
          *
          * @param songId
