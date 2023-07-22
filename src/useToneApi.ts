@@ -176,6 +176,28 @@ export default function useToneApi() {
          * @returns
          */
         update: async (song: any) => await patch(api + '/catalog/songs', song),
+        /**
+         *
+         * @param songId
+         * @param type
+         * @param file
+         * @returns
+         */
+        upload: async (songId: string, type: string, file: File) => {
+          const formData = new FormData()
+
+          formData.append('file', file)
+
+          return await fetch(api + '/catalog/songs/' + songId + '/upload', {
+            method: 'PUT',
+            headers: {
+              Authorization: 'BEARER ' + sessionStorage.getItem('tone.access'),
+            },
+            body: formData,
+          })
+            .then((response) => response.json())
+            .catch((error) => console.log(error))
+        },
       },
     },
   }
