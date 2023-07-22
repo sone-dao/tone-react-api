@@ -183,7 +183,7 @@ export default function useToneApi() {
          * @param file
          * @returns
          */
-        upload: async (songId: string, type: string, file: File) => {
+        upload: async (songId: string, type: string, file: File | Blob) => {
           const formData = new FormData()
 
           formData.append('file', file)
