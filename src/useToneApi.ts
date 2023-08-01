@@ -163,7 +163,7 @@ export default function useToneApi() {
          * @returns
          */
         get: async (songId: string = '') =>
-          await get(api + '/catalog/songs?songId=' + songId),
+          await get(api + '/catalog/song/' + songId),
         /**
          *
          * @param song - Song object
@@ -176,7 +176,7 @@ export default function useToneApi() {
          * @returns
          */
         update: async (songId: string, song: any) =>
-          await patch(api + '/catalog/songs?songId=' + songId, song),
+          await patch(api + '/catalog/song/' + songId, song),
         /**
          *
          * @param songId
@@ -190,7 +190,7 @@ export default function useToneApi() {
           formData.append('file', file)
 
           return await fetch(
-            api + '/catalog/songs/' + songId + '/upload?type=' + type,
+            api + '/catalog/song/' + songId + '/upload?type=' + type,
             {
               method: 'PUT',
               headers: {
