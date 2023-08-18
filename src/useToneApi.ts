@@ -15,21 +15,9 @@ export default function useToneApi() {
   const tone = {
     auth: {
       email: {
-        /**
-         *
-         * @param {string} email - The user's email address.
-         * @returns
-         */
         attempt: async (email: string) =>
           await get(api + '/auth?email=' + email),
-        /**
-         *
-         * @param {string} email - The user's email address.
-         * @param {Object} config - Config object for Tone API route.
-         * @param {string} config.otp - The user supplied time password.
-         * @param {string} config.nonce - The user supplied nonce.
-         * @returns
-         */
+
         auth: async (email: string, config: IToneReactApiAuthConfig) =>
           await post(api + '/auth?email=' + email, {
             otp: config.otp,
@@ -37,10 +25,6 @@ export default function useToneApi() {
           }),
       },
       token: {
-        /**
-         *
-         * @returns
-         */
         refresh: async () =>
           await fetch(api + '/auth/token/refresh', {
             method: 'GET',
@@ -53,95 +37,52 @@ export default function useToneApi() {
       },
     },
     users: {
-      /**
-       *
-       * @returns
-       */
       self: async () => await get(api + '/users/self'),
-      /**
-       *
-       * @param {string} userId - The user's public ID on Tone.
-       * @returns
-       */
+
       get: async (userId: string = '') =>
         await get(api + '/users?userId=' + userId),
-      /**
-       *
-       * @param user - User object
-       * @returns
-       */
+
       create: async (user: any) => await put(api + '/users', user),
-      /**
-       *
-       * @param user - User object
-       * @returns
-       */
+
       update: async (user: any) => await patch(api + '/users', user),
     },
     catalog: {
       entities: {
-        /**
-         *
-         * @param entityId
-         * @returns
-         */
         get: async (entityId: string = '') =>
           await get(api + '/catalog/entities?entityId=' + entityId),
-        /**
-         *
-         * @param entity - Entity object
-         * @returns
-         */
+
         create: async (entity: any) =>
           await put(api + '/catalog/entities', entity),
-        /**
-         *
-         * @param entity - Entity object
-         * @returns
-         */
+
         update: async (entity: any) =>
           await patch(api + '/catalog/entities', entity),
       },
-      releases: {
-        /**
-         *
-         * @param releaseId
-         * @returns
-         */
-        get: async (releaseId: string = '') =>
-          await get(api + '/catalog/releases?releaseId=' + releaseId),
-        /**
-         *
-         * @param release - Release object
-         * @returns
-         */
+      release: {
+        get: async (releaseId: string) =>
+          await get(api + '/catalog/release/' + releaseId),
+
+        getSongs: async (releaseId: string) =>
+          await get(api + '/catalog/release/' + releaseId + '/songs'),
+
         create: async (release: any) =>
-          await put(api + '/catalog/releases', release),
-        /**
-         *
-         * @param release - Release object
-         * @returns
-         */
+          await put(api + '/catalog/release', release),
+
         update: async (releaseId: string, release: any) =>
-          await patch(
-            api + '/catalog/releases?releaseId=' + releaseId,
-            release
-          ),
+          await patch(api + '/catalog/release/' + releaseId, release),
+
         artwork: {
-          /**
-           *
-           * @param releaseId
-           * @param type
-           * @param file
-           * @returns
-           */
+          get: async (releaseId: string, type: string, size: string) =>
+            await get(
+              api + `/catalog/release/${releaseId}/art/${type}/${size}`
+            ),
+
           upload: async (releaseId: string, type: string, file: File) => {
             const formData = new FormData()
 
             formData.append('file', file)
 
             return await fetch(
-              api + '/catalog/releases/' + releaseId + '/art/' + type,
+              api + '/catalog/release/' + releaseId + '/art/' + type,
               {
                 method: 'PUT',
                 headers: {
@@ -156,34 +97,18 @@ export default function useToneApi() {
           },
         },
       },
-      songs: {
-        /**
-         *
-         * @param songId - id of song on Tone
-         * @returns
-         */
+      releases: {
+        get: async () => await get(api + '/catalog/releases'),
+      },
+      song: {
         get: async (songId: string = '') =>
           await get(api + '/catalog/song/' + songId),
-        /**
-         *
-         * @param song - Song object
-         * @returns
-         */
-        create: async (song: any) => await put(api + '/catalog/songs', song),
-        /**
-         *
-         * @param song - Song object
-         * @returns
-         */
+
+        create: async (song: any) => await put(api + '/catalog/song', song),
+
         update: async (songId: string, song: any) =>
           await patch(api + '/catalog/song/' + songId, song),
-        /**
-         *
-         * @param songId
-         * @param type
-         * @param file
-         * @returns
-         */
+
         upload: async (songId: string, type: string, file: File | Blob) => {
           const formData = new FormData()
 
@@ -203,6 +128,21 @@ export default function useToneApi() {
             .then((response) => response.json())
             .catch((error) => console.log(error))
         },
+      },
+      songs: {
+        get: async () => await get(api + '/catalog/songs'),
+      },
+      tag: {
+        get: async (tagId: string) => await get(api + '/catalog/tag/' + tagId),
+
+        create: async (tag: any) => await put(api + '/catalog/tag', tag),
+      },
+      tags: {
+        get: async (tagIds: string) =>
+          await get(api + '/catalog/tags/' + tagIds),
+
+        search: async (term: string) =>
+          await get(api + '/catalog/tags/search/' + term),
       },
     },
   }
