@@ -18,10 +18,9 @@ export default function useToneApi() {
         attempt: async (email: string) =>
           await get(api + '/auth?email=' + email),
 
-        auth: async (email: string, config: IToneReactApiAuthConfig) =>
+        auth: async (email: string, code: string) =>
           await post(api + '/auth?email=' + email, {
-            otp: config.otp,
-            nonce: config.nonce,
+            code,
           }),
       },
       token: {
@@ -171,7 +170,15 @@ export default function useToneApi() {
     data?: any,
     fetchConfig?: object
   ) {
-    const accessToken = sessionStorage.getItem('tone.access')
+    let accessToken = sessionStorage.getItem('tone.access') || ''
+
+    if (!accessToken) {
+      accessToken = await fetch(api + '/auth/token/anon')
+        .then((response) => response.json())
+        .then((data) => data.token)
+
+      sessionStorage.setItem('tone.access', accessToken)
+    }
 
     const config = fetchConfig || {
       method,
