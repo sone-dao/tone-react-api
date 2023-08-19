@@ -16,12 +16,12 @@ export default function useToneApi() {
     auth: {
       email: {
         attempt: async (email: string) =>
-          await get(api + '/auth?email=' + email),
+          await get(api + '/auth?email=' + email).catch((error) => error),
 
         auth: async (email: string, code: string) =>
           await post(api + '/auth?email=' + email, {
             code,
-          }),
+          }).catch((error) => error),
       },
       token: {
         refresh: async () =>
@@ -189,7 +189,11 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    await fetch(url, config).then((response) => console.log(response))
+    try {
+      await fetch(url, config).then((response) => console.log(response))
+    } catch (error) {
+      console.log({ error })
+    }
 
     /*if (result.status !== 401) return result
 
