@@ -189,18 +189,17 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    const result =
-      (await fetch(url, config)
-        .then((response) => response.json())
-        .catch((error) => error)) || false
+    const result = await fetch(url, config).then((response) =>
+      response.ok ? response.json() : response.body
+    )
 
     if (result.status !== 401) return result
 
     await genNewAccessToken()
 
-    return await fetch(url, config)
-      .then((response) => response.json())
-      .catch((error) => console.log(error))
+    return await fetch(url, config).then((response) =>
+      response.ok ? response.json() : response.body
+    )
   }
 
   async function genNewAccessToken() {
