@@ -189,11 +189,13 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    try {
-      await fetch(url, config).then((response) => console.log(response))
-    } catch (error) {
-      console.log({ error })
-    }
+    await fetch(url, config)
+      .then((response) => {
+        if (!response.ok) {
+          throw response
+        } else response.json()
+      })
+      .catch((error) => console.log(error))
 
     /*if (result.status !== 401) return result
 
