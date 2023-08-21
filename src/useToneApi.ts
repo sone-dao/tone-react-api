@@ -16,10 +16,10 @@ export default function useToneApi() {
     auth: {
       email: {
         attempt: async (email: string) =>
-          await get(api + '/auth?email=' + email).catch((error) => error),
+          await get(api + '/auth/email/' + email).catch((error) => error),
 
         auth: async (email: string, code: string) =>
-          await post(api + '/auth?email=' + email, {
+          await post(api + `/auth/${email}/${code}`, {
             code,
           }).catch((error) => error),
       },
