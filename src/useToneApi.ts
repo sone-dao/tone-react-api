@@ -1,5 +1,6 @@
 'use client'
 
+import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 interface IToneReactApiAuthConfig {
@@ -189,15 +190,15 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    const result = await fetch(url, config).catch((error) => console.log(error))
+    const result = await axios(url, config).catch((error) => error)
 
-    if (result?.status !== 401) return await result?.json()
+    return result
 
-    await genNewAccessToken()
+    /*await genNewAccessToken()
 
     return await fetch(url, config).then((response) =>
       response.ok ? response.json() : response.body
-    )
+    )*/
   }
 
   async function genNewAccessToken() {
