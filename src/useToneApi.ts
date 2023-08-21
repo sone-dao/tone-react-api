@@ -1,6 +1,5 @@
 'use client'
 
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 interface IToneReactApiAuthConfig {
@@ -190,7 +189,9 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    const result = await axios(url, config).catch((error) => error)
+    const result = await fetch(url, config)
+      .then((response) => console.log({ response }))
+      .catch((error) => console.log({ error }))
 
     return result
 
