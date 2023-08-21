@@ -189,9 +189,7 @@ export default function useToneApi() {
       body: JSON.stringify(data),
     }
 
-    const result = await fetch(url, config)
-      .then((response) => console.log({ response }))
-      .catch((error) => console.log({ error }))
+    const result = await fetch(url, config).then((response) => response.json())
 
     return result
 
