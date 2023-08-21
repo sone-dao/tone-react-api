@@ -9,7 +9,6 @@ import postcss from 'rollup-plugin-postcss'
 import preserveDirectives from 'rollup-plugin-preserve-directives'
 
 const plugins = [
-  json(),
   postcss({
     extract: false,
     modules: true,
@@ -17,7 +16,8 @@ const plugins = [
   }),
   commonjs(),
   PeerDepsExternalPlugin(),
-  resolve(),
+  resolve({ browser: true }),
+  json(),
   preserveDirectives.default(),
   terser(),
 ]
