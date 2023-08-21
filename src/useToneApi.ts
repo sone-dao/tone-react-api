@@ -174,7 +174,11 @@ export default function useToneApi() {
 
     if (!accessToken) {
       accessToken = await fetch(api + '/auth/token/anon')
-        .then((response) => response.json())
+        .then((response) => {
+          console.log({ response })
+
+          return response.json()
+        })
         .then((data) => data.token)
 
       sessionStorage.setItem('tone.access', accessToken)
@@ -192,17 +196,12 @@ export default function useToneApi() {
     const result = await fetch(url, config)
       .then((response) => {
         console.log({ response })
+
         return response.json()
       })
       .catch((error) => console.log(error))
 
     return result
-
-    /*await genNewAccessToken()
-
-    return await fetch(url, config).then((response) =>
-      response.ok ? response.json() : response.body
-    )*/
   }
 
   async function genNewAccessToken() {
