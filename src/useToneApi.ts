@@ -191,6 +191,8 @@ export default function useToneApi() {
     }
 
     const result = await axios(url, config)
+      .then((response) => console.log({ response }))
+      .catch((error) => console.log({ error }))
 
     return result
 
