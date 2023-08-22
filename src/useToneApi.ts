@@ -2,11 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 
-interface IToneReactApiAuthConfig {
-  otp?: string
-  nonce?: string
-}
-
 export default function useToneApi() {
   const router = useRouter()
 
@@ -173,11 +168,13 @@ export default function useToneApi() {
     let accessToken = sessionStorage.getItem('tone.access') || ''
 
     if (!accessToken) {
-      accessToken = await fetch(api + '/auth/token/anon')
-        .then((response) => response.json())
-        .then((data) => data.token)
+      await fetch(api + '/auth/token/anon').then((response) => {
+        accessToken = response.headers.get('x-tone-access-token') || ''
 
-      sessionStorage.setItem('tone.access', accessToken)
+        sessionStorage.setItem('tone.access', accessToken)
+
+        response.json()
+      })
     }
 
     const config = fetchConfig || {
