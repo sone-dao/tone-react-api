@@ -19,9 +19,9 @@ export default function useToneApi() {
           await get(api + '/auth/email/' + email).catch((error) => error),
 
         auth: async (email: string, code: string) =>
-          await post(api + `/auth/${email}/${code}`, {
-            code,
-          }).catch((error) => error),
+          await post(api + `/auth/email/${email}/${code}`, {}).catch(
+            (error) => error
+          ),
       },
       token: {
         refresh: async () =>
@@ -174,11 +174,7 @@ export default function useToneApi() {
 
     if (!accessToken) {
       accessToken = await fetch(api + '/auth/token/anon')
-        .then((response) => {
-          console.log({ response })
-
-          return response.json()
-        })
+        .then((response) => response.json())
         .then((data) => data.token)
 
       sessionStorage.setItem('tone.access', accessToken)
@@ -194,8 +190,22 @@ export default function useToneApi() {
     }
 
     const result = await fetch(url, config)
-      .then((response) => {
-        console.log({ response })
+      .then(async (response) => {
+        if (response.status == 401) {
+          await genNewAccessToken()
+
+          const result = await fetch(url, config)
+            .then((response) => response.json())
+            .catch((error) => console.log(error))
+
+          return result
+        }
+
+        const accessToken = response.headers.get('x-tone-access-token')
+        const sessionToken = response.headers.get('x-tone-session-token')
+
+        accessToken && sessionStorage.setItem('tone.access', accessToken)
+        sessionToken && localStorage.setItem('tone.session', sessionToken)
 
         return response.json()
       })
