@@ -171,7 +171,9 @@ export default function useToneApi() {
       await fetch(api + '/auth/token/anon').then((response) => {
         const token = response.headers.get('x-tone-access-token')
 
-        console.log({ headers: response.headers.entries })
+        const headers = response.headers.entries()
+
+        console.log(headers)
 
         sessionStorage.setItem('tone.access', token as string)
 
