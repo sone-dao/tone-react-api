@@ -169,7 +169,13 @@ export default function useToneApi() {
 
     if (!accessToken) {
       const token = await fetch(api + '/auth/token/anon')
-        .then((response) => response.json())
+        .then((response) => {
+          const accessToken = response.headers.get('x-tone-access-token')
+
+          accessToken && sessionStorage.setItem('tone.access', accessToken)
+
+          return response.json()
+        })
         .catch((error) => console.log(error))
 
       console.log({ token })
