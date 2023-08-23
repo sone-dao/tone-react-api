@@ -170,9 +170,11 @@ export default function useToneApi() {
     if (!accessToken) {
       const token = await fetch(api + '/auth/token/anon')
         .then((response) => {
-          response.headers.forEach((value, key, parent) =>
-            console.log(value, key, parent)
-          )
+          const entries = response.headers.entries()
+
+          for (const entry of entries) {
+            console.log({ entry })
+          }
 
           const accessToken = response.headers.get('x-tone-access-token')
 
