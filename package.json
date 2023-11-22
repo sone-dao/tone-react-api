@@ -37,11 +37,6 @@
     "tslib": "^2.5.0",
     "typescript": "^4.9.5"
   },
-  "peerDependencies": {
-    "next": "^13.4.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
   "dependencies": {
     "@sone-dao/sone-react-utils": "^1.0.1",
     "axios": "^1.4.0"
