@@ -1,10 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 export default function useToneApi() {
-  const router = useRouter()
-
   const api = 'https://api.tone.audio/v1'
 
   const tone = {
@@ -234,11 +230,11 @@ export default function useToneApi() {
       .then((response) => response.json())
       .then((data) => data.tokens.access)
 
-    if (!newAccessToken) {
+    /*if (!newAccessToken) {
       //Send user to login page, etc
       localStorage.setItem('tone.session', '')
       return router.push('/login?t=expired')
-    }
+    }*/
 
     sessionStorage.setItem('tone.access', newAccessToken)
   }

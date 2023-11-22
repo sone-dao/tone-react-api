@@ -1,3 +1,3 @@
-import useToneApi from './useToneApi.js'
+import ToneApiService from './ToneApiService'
 
-export default useToneApi
+export default ToneApiService
