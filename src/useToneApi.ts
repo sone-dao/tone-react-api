@@ -1,5 +1,3 @@
-'use client'
-
 export default function useToneApi() {
   const api = 'https://api.tone.audio/v1'
 
