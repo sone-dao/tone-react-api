@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@sone-dao/sone-react-utils": "^1.0.1",
-    "axios": "^1.4.0"
+    "axios": "^1.4.0",
+    "cookies-next": "^4.1.0"
   }
 }

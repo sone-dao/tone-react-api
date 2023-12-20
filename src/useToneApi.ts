@@ -2,38 +2,6 @@ export default function useToneApi() {
   const api = 'https://api.tone.audio/v1'
 
   const tone = {
-    auth: {
-      email: {
-        attempt: async (email: string) =>
-          await get(api + '/auth/email/' + email).catch((error) => error),
-
-        auth: async (email: string, code: string) =>
-          await post(api + `/auth/email/${email}/${code}`, {}).catch(
-            (error) => error
-          ),
-      },
-      token: {
-        refresh: async () =>
-          await fetch(api + '/auth/token/refresh', {
-            method: 'GET',
-            headers: {
-              Authorization: 'BEARER ' + localStorage.getItem('tone.session'),
-            },
-          })
-            .then((response) => response.json())
-            .catch((error) => error),
-      },
-    },
-    users: {
-      self: async () => await get(api + '/users/self'),
-
-      get: async (userId: string = '') =>
-        await get(api + '/users?userId=' + userId),
-
-      create: async (user: any) => await put(api + '/users', user),
-
-      update: async (user: any) => await patch(api + '/users', user),
-    },
     catalog: {
       entities: {
         get: async (entityId: string = '') =>

@@ -1,8 +1,8 @@
 import ToneService from './ToneService'
 
 export default class AuthService extends ToneService {
-  constructor(sessionToken: string, api: string, debug: boolean) {
-    super(sessionToken, api, debug)
+  constructor(api: string, debug: boolean) {
+    super(api, debug)
   }
 
   sendAuthEmail(email: string) {

@@ -1,12 +1,25 @@
+import { setCookie } from 'cookies-next'
 import ToneService from './ToneService'
 
+type UserResponseSuccess = {
+  ok: boolean
+  message: string
+  user: any
+}
+
+type UserResponseFail = {
+  ok: boolean
+  message: string
+  error: any
+}
+
 export default class UserService extends ToneService {
-  constructor(sessionToken: string, api: string, debug: boolean) {
-    super(sessionToken, api, debug)
+  constructor(api: string, debug: boolean) {
+    super(api, debug)
   }
 
-  createUser(data: any) {
-    return new Promise(async (resolve, reject) => {
+  async createUser(data: any) {
+    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
       this.debug && console.log(`Creating user...`, { data })
 
       const url = this.api + '/users'
@@ -20,43 +33,87 @@ export default class UserService extends ToneService {
         },
         body: JSON.stringify(data),
       })
-        .then((response) => response.json())
-        .then((response) =>
-          !response.ok ? reject(response) : resolve(response)
+        .then(async (response) =>
+          resolve((await response.json()) as UserResponseSuccess)
         )
-        .catch((error) => reject(error))
+        .catch((error) => reject(error as UserResponseFail))
     })
   }
 
-  updateSelf(data: any) {
-    return new Promise(async (resolve, reject) => {
-      this.debug && console.log(`Updating self...`, { data })
+  async updateUser(data: any) {
+    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+      this.debug && console.log(`Updating user...`, { data })
 
-      const url = this.api + '/users/self'
+      const url = this.api + '/users'
 
       this.debug && console.log('url: ' + url)
 
-      return fetch(url, {
+      fetch(url, {
         method: 'PATCH',
         headers: {
+          Authorization: 'BEARER ' + this.getSessionToken(),
           'Content-Type': 'application/json',
-          Authorization: 'BEARER ' + this.sessionToken,
         },
         body: JSON.stringify(data),
       })
-        .then((response) => response.json())
-        .then((response) =>
-          !response.ok ? reject(response) : resolve(response)
+        .then(async (response) =>
+          resolve((await response.json()) as UserResponseSuccess)
         )
-        .catch((error) => reject(error))
+        .catch((error) => reject(error as UserResponseFail))
     })
   }
 
-  verifyEmail(data: any) {
-    return new Promise(async (resolve, reject) => {
-      const url = this.api + '/users/verify'
+  async verifyEmail(email: string, code: string) {
+    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+      const url = this.api + '/users/verify/' + email
 
       this.debug && console.log('url: ' + url)
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'BEARER ' + this.getSessionToken(),
+        },
+        body: JSON.stringify({ email, code }),
+      })
+        .then(async (response) => {
+          const sessionToken =
+            response.headers.get('X-Tone-Session-Token') || ''
+
+          if (sessionToken) {
+            console.log({ sessionToken })
+
+            localStorage.setItem('tone.session', sessionToken)
+
+            setCookie('tone.session', sessionToken)
+          }
+
+          resolve((await response.json()) as UserResponseSuccess)
+        })
+        .catch((error) => reject(error as UserResponseFail))
     })
+  }
+
+  async uploadAvatar(data: any) {
+    this.debug && console.log('Uploading avatar...')
+
+    const url = this.api + '/users/upload/avatar'
+    this.debug && console.log('url: ' + url)
+
+    const body = new FormData()
+
+    body.append('file', data.file)
+    body.append('userId', data.userId)
+
+    console.log({ body })
+
+    return await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'BEARER ' + this.getSessionToken(),
+      },
+      body,
+    }).then((response) => response.json())
   }
 }

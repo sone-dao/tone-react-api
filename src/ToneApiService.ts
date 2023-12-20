@@ -1,4 +1,3 @@
-import { win } from '@sone-dao/sone-react-utils'
 import AuthService from './AuthService'
 import UserService from './UserService'
 
@@ -8,22 +7,19 @@ type ToneApiServiceConfig = {
 }
 
 export default class ToneApiService {
-  sessionToken: string
-  api: string
-  debug: boolean
+  private api: string
+  private debug: boolean
 
   auth: AuthService
   user: UserService
 
-  constructor(config: ToneApiServiceConfig) {
-    this.sessionToken = (win && localStorage.getItem('tone.session')) || ''
+  constructor(config?: ToneApiServiceConfig) {
+    this.api = config?.api || 'https://api.tone.audio/v1'
 
-    this.api = config.api || 'https://api.tone.audio/v1'
+    this.debug = config?.debug || false
 
-    this.debug = config.debug || false
+    this.auth = new AuthService(this.api, this.debug)
 
-    this.auth = new AuthService(this.sessionToken, this.api, this.debug)
-
-    this.user = new UserService(this.sessionToken, this.api, this.debug)
+    this.user = new UserService(this.api, this.debug)
   }
 }

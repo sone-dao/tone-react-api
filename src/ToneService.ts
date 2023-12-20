@@ -1,11 +1,13 @@
 export default class ToneService {
-  sessionToken: string
   api: string
   debug: boolean
 
-  constructor(sessionToken: string, api: string, debug: boolean) {
-    this.sessionToken = sessionToken
+  constructor(api: string, debug: boolean) {
     this.api = api
     this.debug = debug
+  }
+
+  getSessionToken() {
+    return localStorage.getItem('tone.session')
   }
 }
