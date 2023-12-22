@@ -95,6 +95,21 @@ export default class UserService extends ToneService {
     })
   }
 
+  async getAvatar(userId: string) {
+    return new Promise<Blob>(async (resolve, reject) => {
+      this.debug && console.log('Getting avatar...')
+
+      const url = this.api + `/users/${userId}/avatar`
+
+      this.debug && console.log('url: ' + url)
+
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => resolve(blob))
+        .catch((error) => reject(error))
+    })
+  }
+
   async uploadAvatar(data: any) {
     this.debug && console.log('Uploading avatar...')
 
@@ -115,5 +130,26 @@ export default class UserService extends ToneService {
       },
       body,
     }).then((response) => response.json())
+  }
+
+  async signoutUser() {
+    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+      this.debug && console.log('Signing out user...')
+
+      const url = this.api + '/users/signout'
+
+      this.debug && console.log('url: ' + url)
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: 'BEARER ' + this.getSessionToken(),
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(async (response) => response.json())
+        .then((response: UserResponseSuccess) => resolve(response))
+        .catch((error) => reject(error as UserResponseFail))
+    })
   }
 }

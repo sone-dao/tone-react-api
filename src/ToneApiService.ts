@@ -1,10 +1,6 @@
+import { win } from '@sone-dao/sone-react-utils'
 import AuthService from './AuthService'
 import UserService from './UserService'
-
-type ToneApiServiceConfig = {
-  api: string
-  debug: boolean
-}
 
 export default class ToneApiService {
   private api: string
@@ -13,10 +9,12 @@ export default class ToneApiService {
   auth: AuthService
   user: UserService
 
-  constructor(config?: ToneApiServiceConfig) {
-    this.api = config?.api || 'https://api.tone.audio/v1'
+  constructor() {
+    const debug = (win && win.__TONE_DEBUG__) || {}
 
-    this.debug = config?.debug || false
+    this.api = debug?.api || 'https://api.tone.audio/v1'
+
+    this.debug = debug?.isDebug || false
 
     this.auth = new AuthService(this.api, this.debug)
 
