@@ -65,7 +65,7 @@ export default class UserService extends ToneService {
 
   async verifyEmail(email: string, code: string) {
     return new Promise<UserResponseSuccess>(async (resolve, reject) => {
-      const url = this.api + '/users/verify/' + email
+      const url = this.api + '/users/verify'
 
       this.debug && console.log('url: ' + url)
 
