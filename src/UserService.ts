@@ -95,6 +95,35 @@ export default class UserService extends ToneService {
     })
   }
 
+  async reverifyEmail(email: string) {
+    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+      this.debug && console.log('Reverifying e-mail...')
+
+      const url = this.api + `/users/reverify`
+
+      this.debug && console.log('url: ' + url)
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+        .then((response) => response.json())
+        .then((response: UserResponseSuccess) => {
+          this.debug && console.log('E-mail Reverification Response', response)
+
+          resolve(response)
+        })
+        .catch((error: UserResponseFail) => {
+          this.debug && console.log('E-mail Reverification Error', error)
+
+          reject(error)
+        })
+    })
+  }
+
   async getAvatar(userId: string) {
     return new Promise<Blob>(async (resolve, reject) => {
       this.debug && console.log('Getting avatar...')
