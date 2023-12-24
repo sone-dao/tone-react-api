@@ -81,11 +81,7 @@ export default class AuthService extends ToneService {
 
           return response.json()
         })
-        .then((response) =>
-          !response.ok
-            ? reject(response as VerifyCodeFail)
-            : resolve(response as VerifyCodeSuccess)
-        )
+        .then((response: VerifyCodeSuccess) => resolve(response))
         .catch((error) => {
           this.debug && console.log('Code Error Response', error)
 

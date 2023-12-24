@@ -26,17 +26,26 @@ export default class UserService extends ToneService {
 
       this.debug && console.log('url: ' + url)
 
-      return fetch(url, {
+      fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
-        .then(async (response) =>
-          resolve((await response.json()) as UserResponseSuccess)
-        )
-        .catch((error) => reject(error as UserResponseFail))
+        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) return reject(response as UserResponseFail)
+
+          this.debug && console.log('Create User Response', response)
+
+          return resolve(response as UserResponseSuccess)
+        })
+        .catch((error: UserResponseFail) => {
+          this.debug && console.log('Create User Error Response', error)
+
+          return reject(error)
+        })
     })
   }
 
@@ -56,10 +65,9 @@ export default class UserService extends ToneService {
         },
         body: JSON.stringify(data),
       })
-        .then(async (response) =>
-          resolve((await response.json()) as UserResponseSuccess)
-        )
-        .catch((error) => reject(error as UserResponseFail))
+        .then((response) => response.json())
+        .then((response: UserResponseSuccess) => resolve(response))
+        .catch((error: UserResponseFail) => reject(error))
     })
   }
 
@@ -89,8 +97,9 @@ export default class UserService extends ToneService {
             setCookie('tone.session', sessionToken)
           }
 
-          resolve((await response.json()) as UserResponseSuccess)
+          return response.json()
         })
+        .then((response: UserResponseSuccess) => resolve(response))
         .catch((error) => reject(error as UserResponseFail))
     })
   }
@@ -150,9 +159,7 @@ export default class UserService extends ToneService {
     body.append('file', data.file)
     body.append('userId', data.userId)
 
-    console.log({ body })
-
-    return await fetch(url, {
+    fetch(url, {
       method: 'PUT',
       headers: {
         Authorization: 'BEARER ' + this.getSessionToken(),
