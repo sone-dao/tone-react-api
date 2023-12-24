@@ -1,6 +1,6 @@
 {
   "name": "@sone-dao/tone-react-api",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/sone-dao/tone-react-api.git",
