@@ -40,14 +40,16 @@ export default class AuthService extends ToneService {
       })
         .then((response) => response.json())
         .then((response: AuthEmailResponse) => {
+          if (!response.ok) return reject(response)
+
           this.debug && console.log('Auth Response:', response)
 
-          resolve(response)
+          return resolve(response)
         })
         .catch((error: AuthEmailResponse) => {
           this.debug && console.log('Auth Error Response', error)
 
-          reject(error)
+          return reject(error)
         })
     })
   }
@@ -67,7 +69,11 @@ export default class AuthService extends ToneService {
         },
         body: JSON.stringify({ email, code }),
       })
-        .then((response) => {
+        .then(async (response) => {
+          const data = await response.json()
+
+          if (!data.ok) return reject(response)
+
           const sessionToken =
             response.headers.get('X-Tone-Session-Token') || ''
 
@@ -79,7 +85,7 @@ export default class AuthService extends ToneService {
 
           setCookie('tone.session', sessionToken)
 
-          return response.json()
+          return data
         })
         .then((response: VerifyCodeSuccess) => resolve(response))
         .catch((error) => {
