@@ -126,6 +126,15 @@
   resolved "https://registry.yarnpkg.com/@sone-dao/sone-react-utils/-/sone-react-utils-1.0.1.tgz#81da4c7e8c83115b66e4b4b875f6e77554770328"
   integrity sha512-48hho0n41lqMY5NByAqnMPy11vVN5xXOYwTapdOvgRHVtVZVboA5U/zRJcLEzbvTN/P8w6gzCuqXfgh/xyTHiA==
 
+"@sone-dao/tone-react-api@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@sone-dao/tone-react-api/-/tone-react-api-2.6.0.tgz#ca92e29d446bb767eb0e49d8b20d1946ce899ce0"
+  integrity sha512-d2dXLLeFJgC/MJ6/Txcxn5QH8wV9xYdyetI2OlKBl/7vo2DCkRQeCJtsAio+uZRCupvBMYJ+PXt4+rbIIXCkPA==
+  dependencies:
+    "@sone-dao/sone-react-utils" "^1.0.1"
+    axios "^1.4.0"
+    cookies-next "^4.1.0"
+
 "@trysound/sax@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
