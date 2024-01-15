@@ -1,4 +1,3 @@
-import { setCookie } from 'cookies-next'
 import ToneService from './ToneService'
 
 type UserResponseSuccess = {
@@ -66,22 +65,35 @@ export default class UserService extends ToneService {
         body: JSON.stringify(data),
       })
         .then((response) => response.json())
-        .then((response: UserResponseSuccess) => resolve(response))
-        .catch((error: UserResponseFail) => reject(error))
+        .then((response) => {
+          if (!response) return reject(response as UserResponseFail)
+
+          this.debug && console.log('Update User Response', response)
+
+          return resolve(response)
+        })
+        .catch((error: UserResponseFail) => {
+          this.debug && console.log('Update User Error Response', error)
+
+          return reject(error)
+        })
     })
   }
 
   async verifyEmail(email: string, code: string) {
     return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+      this.debug && console.log('Verifying user email...')
+
       const url = this.api + '/users/verify'
 
       this.debug && console.log('url: ' + url)
+
+      this.debug && console.log('Request body', { email, code })
 
       fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'BEARER ' + this.getSessionToken(),
         },
         body: JSON.stringify({ email, code }),
       })
@@ -90,17 +102,38 @@ export default class UserService extends ToneService {
             response.headers.get('X-Tone-Session-Token') || ''
 
           if (sessionToken) {
-            console.log({ sessionToken })
+            this.debug && console.log({ sessionToken })
 
             localStorage.setItem('tone.session', sessionToken)
 
-            setCookie('tone.session', sessionToken)
+            fetch('/api/cookie', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ sessionToken }),
+            }).catch((error) => {
+              this.debug &&
+                console.log('Error setting session token cookie on server', {
+                  error,
+                })
+            })
           }
 
           return response.json()
         })
-        .then((response: UserResponseSuccess) => resolve(response))
-        .catch((error) => reject(error as UserResponseFail))
+        .then((response) => {
+          if (!response.ok) return reject(response as UserResponseFail)
+
+          this.debug && console.log('User Verification Response', { response })
+
+          return resolve(response)
+        })
+        .catch((error: UserResponseFail) => {
+          this.debug && console.log('Create User Error Response', { error })
+
+          return reject(error)
+        })
     })
   }
 
