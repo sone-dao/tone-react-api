@@ -17,6 +17,34 @@ export default class UserService extends ToneService {
     super(api, debug)
   }
 
+  async getSelf() {
+    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+      this.debug && console.log('Getting self...')
+
+      const url = this.api + '/users'
+
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: 'BEARER ' + this.getSessionToken(),
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) return reject(response as UserResponseFail)
+
+          this.debug && console.log('Get Self Response', response)
+
+          return resolve(response as UserResponseSuccess)
+        })
+        .catch((error: UserResponseFail) => {
+          this.debug && console.log('Get Self Error Response', error)
+
+          return reject(error)
+        })
+    })
+  }
+
   async createUser(data: any) {
     return new Promise<UserResponseSuccess>(async (resolve, reject) => {
       this.debug && console.log(`Creating user...`, { data })
