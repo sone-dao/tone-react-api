@@ -1,6 +1,7 @@
 import { win } from '@sone-dao/sone-react-utils'
 import AuthService from './AuthService'
 import EntityService from './EntityService'
+import TagService from './TagService'
 import UserService from './UserService'
 
 export default class ToneApiService {
@@ -10,6 +11,7 @@ export default class ToneApiService {
   auth: AuthService
   user: UserService
   entities: EntityService
+  tags: TagService
 
   constructor() {
     const debug = (win && win.__TONE_DEBUG__) || {}
@@ -23,5 +25,7 @@ export default class ToneApiService {
     this.user = new UserService(this.api, this.debug)
 
     this.entities = new EntityService(this.api, this.debug)
+
+    this.tags = new TagService(this.api, this.debug)
   }
 }
