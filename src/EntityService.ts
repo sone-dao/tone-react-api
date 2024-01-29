@@ -1,8 +1,8 @@
 import ToneService from './ToneService'
 
 export default class EntityService extends ToneService {
-  constructor(api: string, debug: boolean) {
-    super(api, debug)
+  constructor(api: string, debug: boolean, sessionToken: string) {
+    super(api, debug, sessionToken)
   }
 
   async createEntity(data: any) {
@@ -16,7 +16,7 @@ export default class EntityService extends ToneService {
       fetch(url, {
         method: 'PUT',
         headers: {
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
@@ -48,7 +48,7 @@ export default class EntityService extends ToneService {
       fetch(url, {
         method: 'PUT',
         headers: {
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(custodialEntity),
@@ -85,7 +85,7 @@ export default class EntityService extends ToneService {
     return fetch(url, {
       method: 'PUT',
       headers: {
-        Authorization: 'BEARER ' + this.getSessionToken(),
+        Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
       },
       body,
     }).then((response) => response.json())

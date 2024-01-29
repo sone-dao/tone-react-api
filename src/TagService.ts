@@ -7,8 +7,8 @@ type Tag = {
 }
 
 export default class TagService extends ToneService {
-  constructor(api: string, debug: boolean) {
-    super(api, debug)
+  constructor(api: string, debug: boolean, sessionToken: string) {
+    super(api, debug, sessionToken)
   }
 
   async searchByDisplay(display: string) {
@@ -21,7 +21,7 @@ export default class TagService extends ToneService {
       fetch(url, {
         method: 'GET',
         headers: {
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
         },
       })
         .then((response) => response.json())
@@ -51,7 +51,7 @@ export default class TagService extends ToneService {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
         },
         body: JSON.stringify({ display }),
       })

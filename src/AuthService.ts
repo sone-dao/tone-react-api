@@ -19,8 +19,8 @@ type VerifyCodeFail = {
 }
 
 export default class AuthService extends ToneService {
-  constructor(api: string, debug: boolean) {
-    super(api, debug)
+  constructor(api: string, debug: boolean, sessionToken: string) {
+    super(api, debug, sessionToken)
   }
 
   sendAuthEmail(email: string) {
@@ -80,8 +80,6 @@ export default class AuthService extends ToneService {
           !sessionToken && reject({ ok: false, message: 'NO_SESSION_TOKEN' })
 
           this.debug && console.log('Setting session token', sessionToken)
-
-          localStorage.setItem('tone.session', sessionToken)
 
           setCookie('tone.session', sessionToken)
 

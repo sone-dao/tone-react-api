@@ -1,24 +1,23 @@
+import { setCookie } from 'cookies-next'
 import ToneService from './ToneService'
 
-type UserResponseSuccess = {
-  ok: boolean
-  message: string
-  user: any
-}
-
-type UserResponseFail = {
-  ok: boolean
-  message: string
-  error: any
+type User = {
+  userId?: string
+  display?: string
+  description?: string
+  socials?: any
+  colors?: [string, string]
+  custodianOn?: any[]
+  canActAs?: any
 }
 
 export default class UserService extends ToneService {
-  constructor(api: string, debug: boolean) {
-    super(api, debug)
+  constructor(api: string, debug: boolean, sessionToken: string) {
+    super(api, debug, sessionToken)
   }
 
   async getSelf() {
-    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+    return new Promise<User>(async (resolve, reject) => {
       this.debug && console.log('Getting self...')
 
       const url = this.api + '/users'
@@ -26,18 +25,18 @@ export default class UserService extends ToneService {
       fetch(url, {
         method: 'GET',
         headers: {
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
         },
       })
         .then((response) => response.json())
         .then((response) => {
-          if (!response.ok) return reject(response as UserResponseFail)
+          if (response.error) return reject(response.error)
 
           this.debug && console.log('Get Self Response', response)
 
-          return resolve(response as UserResponseSuccess)
+          return resolve(response.user)
         })
-        .catch((error: UserResponseFail) => {
+        .catch((error) => {
           this.debug && console.log('Get Self Error Response', error)
 
           return reject(error)
@@ -46,7 +45,7 @@ export default class UserService extends ToneService {
   }
 
   async createUser(data: any) {
-    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+    return new Promise<User>(async (resolve, reject) => {
       this.debug && console.log(`Creating user...`, { data })
 
       const url = this.api + '/users'
@@ -62,13 +61,13 @@ export default class UserService extends ToneService {
       })
         .then((response) => response.json())
         .then((response) => {
-          if (!response.ok) return reject(response as UserResponseFail)
+          if (response.error) return reject(response.error)
 
           this.debug && console.log('Create User Response', response)
 
-          return resolve(response as UserResponseSuccess)
+          return resolve(response.user)
         })
-        .catch((error: UserResponseFail) => {
+        .catch((error) => {
           this.debug && console.log('Create User Error Response', error)
 
           return reject(error)
@@ -77,7 +76,7 @@ export default class UserService extends ToneService {
   }
 
   async updateUser(data: any) {
-    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+    return new Promise<User>(async (resolve, reject) => {
       this.debug && console.log(`Updating user...`, { data })
 
       const url = this.api + '/users'
@@ -87,20 +86,20 @@ export default class UserService extends ToneService {
       fetch(url, {
         method: 'PATCH',
         headers: {
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
         .then((response) => response.json())
         .then((response) => {
-          if (!response) return reject(response as UserResponseFail)
+          if (response.error) return reject(response.error)
 
           this.debug && console.log('Update User Response', response)
 
-          return resolve(response)
+          return resolve(response.user)
         })
-        .catch((error: UserResponseFail) => {
+        .catch((error) => {
           this.debug && console.log('Update User Error Response', error)
 
           return reject(error)
@@ -109,7 +108,7 @@ export default class UserService extends ToneService {
   }
 
   async verifyEmail(email: string, code: string) {
-    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+    return new Promise<User>(async (resolve, reject) => {
       this.debug && console.log('Verifying user email...')
 
       const url = this.api + '/users/verify'
@@ -132,32 +131,19 @@ export default class UserService extends ToneService {
           if (sessionToken) {
             this.debug && console.log({ sessionToken })
 
-            localStorage.setItem('tone.session', sessionToken)
-
-            fetch('/api/cookie', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ sessionToken }),
-            }).catch((error) => {
-              this.debug &&
-                console.log('Error setting session token cookie on server', {
-                  error,
-                })
-            })
+            setCookie('tone.session', sessionToken)
           }
 
           return response.json()
         })
         .then((response) => {
-          if (!response.ok) return reject(response as UserResponseFail)
+          if (response.error) return reject(response.error)
 
           this.debug && console.log('User Verification Response', { response })
 
-          return resolve(response)
+          return resolve(response.user)
         })
-        .catch((error: UserResponseFail) => {
+        .catch((error) => {
           this.debug && console.log('Create User Error Response', { error })
 
           return reject(error)
@@ -166,7 +152,7 @@ export default class UserService extends ToneService {
   }
 
   async reverifyEmail(email: string) {
-    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+    return new Promise<boolean>(async (resolve, reject) => {
       this.debug && console.log('Reverifying e-mail...')
 
       const url = this.api + `/users/reverify`
@@ -181,12 +167,12 @@ export default class UserService extends ToneService {
         body: JSON.stringify({ email }),
       })
         .then((response) => response.json())
-        .then((response: UserResponseSuccess) => {
+        .then((response) => {
           this.debug && console.log('E-mail Reverification Response', response)
 
-          resolve(response)
+          resolve(response.ok)
         })
-        .catch((error: UserResponseFail) => {
+        .catch((error) => {
           this.debug && console.log('E-mail Reverification Error', error)
 
           reject(error)
@@ -218,19 +204,25 @@ export default class UserService extends ToneService {
     const body = new FormData()
 
     body.append('file', data.file)
+
     body.append('userId', data.userId)
 
     fetch(url, {
       method: 'PUT',
       headers: {
-        Authorization: 'BEARER ' + this.getSessionToken(),
+        Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
       },
       body,
-    }).then((response) => response.json())
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log({ response })
+      })
+      .catch((error) => console.log({ error }))
   }
 
   async signoutUser() {
-    return new Promise<UserResponseSuccess>(async (resolve, reject) => {
+    return new Promise<boolean>(async (resolve, reject) => {
       this.debug && console.log('Signing out user...')
 
       const url = this.api + '/users/signout'
@@ -240,13 +232,13 @@ export default class UserService extends ToneService {
       fetch(url, {
         method: 'POST',
         headers: {
-          Authorization: 'BEARER ' + this.getSessionToken(),
+          Authorization: this.sessionToken && 'BEARER ' + this.sessionToken,
           'Content-Type': 'application/json',
         },
       })
         .then(async (response) => response.json())
-        .then((response: UserResponseSuccess) => resolve(response))
-        .catch((error) => reject(error as UserResponseFail))
+        .then((response) => resolve(response.ok))
+        .catch((error) => reject(error))
     })
   }
 }
