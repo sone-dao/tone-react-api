@@ -2,6 +2,7 @@ import { win } from '@sone-dao/sone-react-utils'
 import { getCookie } from 'cookies-next'
 import AuthService from './AuthService'
 import EntityService from './EntityService'
+import JukeboxService from './JukeboxService'
 import ReleaseService from './ReleaseService'
 import SongService from './SongService'
 import TagService from './TagService'
@@ -18,6 +19,7 @@ export default class ToneApiService {
   tags: TagService
   releases: ReleaseService
   songs: SongService
+  jukebox: JukeboxService
 
   constructor(sessionToken?: string) {
     const debug = (win && win.__TONE_DEBUG__) || {}
@@ -42,5 +44,7 @@ export default class ToneApiService {
     this.releases = new ReleaseService(this.api, this.debug, this.sessionToken)
 
     this.songs = new SongService(this.api, this.debug, this.sessionToken)
+
+    this.jukebox = new JukeboxService(this.api, this.debug, this.sessionToken)
   }
 }
